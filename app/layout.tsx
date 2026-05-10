@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Nav from "./_components/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,30 +30,27 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
-        <header className="border-b border-zinc-900 bg-zinc-950/90 backdrop-blur">
+        <header className="border-b border-zinc-900 bg-zinc-950/90 backdrop-blur fixed top-0 z-50 w-full">
           <div className="mx-auto flex w-full max-w-7xl items-center gap-8 px-6 py-3 text-sm">
-            <Link href="/" className="font-semibold tracking-tight text-yellow-400">
+            <Link
+              href="/"
+              className="font-semibold tracking-tight text-yellow-400"
+            >
               ZeroArena
             </Link>
-            <nav className="flex items-center gap-5">
-              <Link href="/" className="text-zinc-300 hover:text-zinc-100">
-                Agents
-              </Link>
-              <Link href="/leaderboard" className="text-zinc-300 hover:text-zinc-100">
-                Leaderboard
-              </Link>
-              <a
-                href="https://github.com/Zero-Arena"
-                target="_blank"
-                rel="noreferrer"
-                className="text-zinc-300 hover:text-zinc-100"
-              >
-                GitHub
-              </a>
-            </nav>
+            <Nav />
           </div>
         </header>
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 my-10">{children}</main>
+        <footer className="border-t border-zinc-900 bg-zinc-950/90 backdrop-blur fixed bottom-0 z-50 w-full">
+          <div className="mx-auto flex w-full max-w-7xl items-center gap-8 px-6 py-3 text-sm">
+            <p className="text-[11px] text-zinc-500">
+              Demo data on 0G Galileo testnet. Trust tier T1 = on-chain
+              commitment, T2 = owner-shared reproducibility, T3 = TEE-attested
+              via 0G Compute Sealed Inference (v0.2).
+            </p>
+          </div>
+        </footer>
       </body>
     </html>
   );

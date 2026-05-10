@@ -284,11 +284,6 @@ export default async function AgentRegistryPage({
             ))}
           </div>
         )}
-
-        <p className="mt-8 text-[11px] text-zinc-500">
-          Demo data on 0G Galileo testnet. Trust tier T1 = on-chain commitment, T2 = owner-shared
-          reproducibility, T3 = TEE-attested via 0G Compute Sealed Inference (v0.2).
-        </p>
       </div>
     </div>
   );
