@@ -16,6 +16,7 @@ import {
 } from "@/lib/agents";
 import { explorerUrl } from "@/lib/chain/galileo";
 import { CONTRACTS } from "@/lib/chain/contracts";
+import { findDataset, formatWindow } from "@/lib/chain/datasets";
 import PerformanceChart from "./PerformanceChart";
 
 export const revalidate = 60;
@@ -55,15 +56,41 @@ function StatRow({ label, value, valueClass }: { label: string; value: string; v
   );
 }
 
-function HashRow({ label, value }: { label: string; value: string }) {
+function HashRow({
+  label,
+  value,
+  href,
+}: {
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  const body = (
+    <span
+      className="inline-flex items-center gap-1 font-mono text-[11px] text-zinc-300 group-hover:text-zinc-100"
+      title={value}
+    >
+      {truncateHash(value, 10, 8)}
+      {href && <ExternalIcon className="size-2.5 text-zinc-500 group-hover:text-zinc-300" />}
+    </span>
+  );
   return (
     <div className="flex items-center justify-between gap-2 text-xs">
       <span className="text-zinc-500 underline decoration-dotted decoration-zinc-700 underline-offset-4">
         {label}
       </span>
-      <span className="font-mono text-[11px] text-zinc-300" title={value}>
-        {truncateHash(value, 10, 8)}
-      </span>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="group inline-flex items-center"
+        >
+          {body}
+        </a>
+      ) : (
+        body
+      )}
     </div>
   );
 }
@@ -146,6 +173,8 @@ export default async function AgentDetailPage({
   const series = generateChartSeries(totalReturn);
   const returnColor = totalReturn >= 0 ? "text-emerald-400" : "text-rose-400";
   const tierInfo = TRUST_TIER_INFO[a.trustTier];
+  const dataset = findDataset(a.datasetHash);
+  const inftTokenUrl = `${explorerUrl("token", CONTRACTS.ZeroArenaINFT)}?a=${a.tokenId}`;
 
   return (
     <div className="min-h-screen w-full bg-zinc-950 text-zinc-100">
@@ -268,7 +297,15 @@ export default async function AgentDetailPage({
             <div className="mt-4 space-y-2.5">
               <StatRow label="Trust Tier" value={tierInfo.label} valueClass={tierInfo.color} />
               <HashRow label="runHash" value={a.runHash} />
-              <HashRow label="datasetHash" value={a.datasetHash} />
+              <HashRow
+                label="datasetHash"
+                value={a.datasetHash}
+                href={
+                  dataset
+                    ? `${explorerUrl("tx", dataset.rootHash)}`
+                    : undefined
+                }
+              />
               <HashRow label="storageRootHash" value={a.storageRootHash} />
               {a.attestationHash ? (
                 <HashRow label="attestationHash" value={a.attestationHash} />
@@ -276,7 +313,20 @@ export default async function AgentDetailPage({
                 <StatRow label="attestationHash" value="— (T3 only)" valueClass="text-zinc-500" />
               )}
               <StatRow label="Submitted" value={a.createdAt} />
-              <StatRow label="Owner" value={truncateAddress(a.currentOwner)} valueClass="font-mono text-zinc-200" />
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="text-zinc-500 underline decoration-dotted decoration-zinc-700 underline-offset-4">
+                  Owner
+                </span>
+                <a
+                  href={explorerUrl("address", a.currentOwner)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex items-center gap-1 font-mono text-zinc-200 hover:text-zinc-100"
+                >
+                  {truncateAddress(a.currentOwner)}
+                  <ExternalIcon className="size-2.5 text-zinc-500 group-hover:text-zinc-300" />
+                </a>
+              </div>
             </div>
             <a
               href={explorerUrl("address", CONTRACTS.AgentCertificate)}
@@ -284,7 +334,7 @@ export default async function AgentDetailPage({
               rel="noreferrer"
               className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-950/40 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-600"
             >
-              <ExternalIcon className="size-3" /> View on 0G Galileo Explorer
+              <ExternalIcon className="size-3" /> View AgentCertificate on Galileo
             </a>
           </div>
 
@@ -295,7 +345,10 @@ export default async function AgentDetailPage({
             </div>
             <div className="mt-4 space-y-2.5">
               <StatRow label="Market" value={a.market === "perp" ? "Futures (perpetual)" : "Spot"} />
-              <StatRow label="Asset" value={`${a.asset}/USDT`} />
+              <StatRow
+                label="Asset"
+                value={dataset ? `${dataset.symbol.replace(/USDT$/, "")}/USDT` : `${a.asset}/USDT`}
+              />
               {a.market === "perp" && (
                 <StatRow
                   label="Leverage"
@@ -306,10 +359,74 @@ export default async function AgentDetailPage({
               <StatRow label="Initial Balance" value={`${fmtMoney(a.initialBalance)} USDT`} />
               <StatRow label="Taker Fee" value={`${(a.feeBps / 100).toFixed(2)}%`} />
               <StatRow label="Slippage" value={`${(a.slippageBps / 100).toFixed(2)}%`} />
-              <StatRow label="Granularity" value="1h candles" />
-              <StatRow label="Window" value="last 365 days" />
+              <StatRow
+                label="Granularity"
+                value={dataset ? `${dataset.interval} candles` : "—"}
+              />
+              <StatRow
+                label="Window"
+                value={dataset ? formatWindow(dataset) : "—"}
+              />
+              <StatRow
+                label="Candles"
+                value={dataset ? dataset.candleCount.toLocaleString("en-US") : "—"}
+              />
+              <StatRow
+                label="Source"
+                value={dataset ? dataset.source : "—"}
+                valueClass={dataset ? "text-zinc-200 capitalize" : "text-zinc-500"}
+              />
             </div>
           </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-5">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-semibold text-zinc-100">How to verify this certificate</div>
+            <span className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-medium text-sky-300 ring-1 ring-sky-400/40">
+              T2 · Reproducibility
+            </span>
+          </div>
+          <ol className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <li className="rounded-lg border border-zinc-800/80 bg-zinc-950/40 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500">Step 1</div>
+              <div className="mt-1 text-xs font-medium text-zinc-200">Download dataset</div>
+              <p className="mt-1 text-[11px] leading-4 text-zinc-500">
+                Pull the BTC/USDT 15m candle bytes from 0G Storage at the rootHash above. Local
+                <code className="mx-1 rounded bg-zinc-800 px-1 py-0.5 font-mono text-[10px] text-zinc-300">
+                  keccak256(bytes)
+                </code>
+                must match this datasetHash.
+              </p>
+            </li>
+            <li className="rounded-lg border border-zinc-800/80 bg-zinc-950/40 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500">Step 2</div>
+              <div className="mt-1 text-xs font-medium text-zinc-200">Re-run with the agent</div>
+              <p className="mt-1 text-[11px] leading-4 text-zinc-500">
+                Owner shares the encrypted agent + AES key. Decrypt locally, run{" "}
+                <code className="rounded bg-zinc-800 px-1 py-0.5 font-mono text-[10px] text-zinc-300">
+                  runBacktest()
+                </code>{" "}
+                with the same options, dataset, and balance.
+              </p>
+            </li>
+            <li className="rounded-lg border border-zinc-800/80 bg-zinc-950/40 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500">Step 3</div>
+              <div className="mt-1 text-xs font-medium text-zinc-200">Match runHash</div>
+              <p className="mt-1 text-[11px] leading-4 text-zinc-500">
+                Recomputed{" "}
+                <code className="rounded bg-zinc-800 px-1 py-0.5 font-mono text-[10px] text-zinc-300">
+                  runHash
+                </code>{" "}
+                must equal the value anchored on-chain. Byte-different = different trades = not the same agent.
+              </p>
+            </li>
+          </ol>
+          <p className="mt-3 text-[11px] leading-5 text-zinc-500">
+            Strategy code never has to leave the owner&apos;s machine in plaintext to a verifier
+            they trust. T3 (TEE attestation via 0G Compute Sealed Inference) lifts this to{" "}
+            <em>trustless</em> verification — ships in v0.2 without an ABI change.
+          </p>
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
