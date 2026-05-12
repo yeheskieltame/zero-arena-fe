@@ -82,8 +82,8 @@ function LeaderboardRow({ entry, rank }: { entry: SeasonLeaderboardEntry; rank: 
     <tr className="transition hover:bg-zinc-900">
       <td className="px-4 py-3"><RankBadge rank={rank} /></td>
       <td className="px-4 py-3">
-        <Link href={`/agent/cert-${entry.tokenId.toString()}/live`} className="text-sm font-medium text-zinc-100 hover:text-yellow-300">
-          Agent #{entry.tokenId.toString()}
+        <Link href={`/agent/${entry.slug}/live`} className="text-sm font-medium text-zinc-100 hover:text-yellow-300">
+          {entry.name}
         </Link>
       </td>
       <td className={`px-4 py-3 text-xs ${statusTone}`}>{statusLabel}</td>
@@ -149,15 +149,15 @@ export default async function SeasonDetailPage({
   const { id } = await params;
   const seasonId = BigInt(id);
 
-  if (!isDeployed(CONTRACTS.Season)) {
-    return <NotDeployedState seasonId={seasonId} />;
-  }
-
   const season = await readSeason(seasonId);
   if (!season) notFound();
 
   const entries = await readSeasonLeaderboard(seasonId);
   const status = statusOf(season);
+  const sourceLabel = isDeployed(CONTRACTS.Season) ? "Galileo live" : "Demo data";
+  const sourceTone = isDeployed(CONTRACTS.Season)
+    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+    : "border-amber-500/40 bg-amber-500/10 text-amber-300";
 
   return (
     <div className="min-h-screen w-full bg-zinc-950 text-zinc-100">
@@ -170,7 +170,15 @@ export default async function SeasonDetailPage({
 
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Season #{season.id.toString()}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold tracking-tight">Season #{season.id.toString()}</h1>
+              <span className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[10px] font-medium ${sourceTone}`}>
+                {sourceLabel === "Galileo live" && (
+                  <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
+                )}
+                {sourceLabel}
+              </span>
+            </div>
             <div className="mt-1 flex items-center gap-2 text-xs">
               <span
                 className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 font-medium ${

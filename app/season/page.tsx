@@ -152,13 +152,23 @@ export default async function SeasonIndexPage() {
                 Galileo live
               </span>
             ) : (
-              <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-amber-300">
-                Season contract pending
+              <span
+                title="The Season contract has not yet been deployed to Galileo. These rows are deterministic placeholder data so the dashboard remains demonstrable."
+                className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-amber-300"
+              >
+                Demo data
               </span>
             )}
             <span className="rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1">{seasons.length} seasons</span>
           </div>
         </div>
+
+        {!deployed && (
+          <div className="mt-4 rounded-md border border-amber-500/30 bg-amber-500/5 px-4 py-2 text-xs text-amber-200/80">
+            ⓘ Showing placeholder seasons. Once <code className="rounded bg-amber-900/30 px-1 py-0.5 font-mono">NEXT_PUBLIC_SEASON_ADDRESS</code>{" "}
+            is set to the deployed Season contract, these rows render live from chain with zero code changes.
+          </div>
+        )}
 
         {seasons.length === 0 ? (
           <EmptyState />

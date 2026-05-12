@@ -52,7 +52,11 @@ export default async function AgentLivePage({
   if (!agent) notFound();
 
   const tokenId = BigInt(agent.tokenId);
-  const live = isDeployed(CONTRACTS.LiveCertificate) ? await readLiveRun(tokenId) : null;
+  // readLiveRun handles the not-deployed case internally — when the
+  // LiveCertificate contract is the zero placeholder it falls back to
+  // mock fixtures so the dashboard is demonstrable for hackathon judges.
+  const live = await readLiveRun(tokenId);
+  const sourceLabel = isDeployed(CONTRACTS.LiveCertificate) ? "Galileo live" : "Demo data";
 
   if (!live) {
     return <NotStartedState slug={slug} tokenId={agent.tokenId.toString()} />;
@@ -79,8 +83,22 @@ export default async function AgentLivePage({
 
         <div className="mt-5 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="text-xs text-zinc-500">Live paper-run dashboard</div>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight">Agent #{agent.tokenId.toString()}</h1>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-zinc-500">Live paper-run dashboard</div>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${
+                  sourceLabel === "Galileo live"
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                    : "border-amber-500/40 bg-amber-500/10 text-amber-300"
+                }`}
+              >
+                {sourceLabel === "Galileo live" && (
+                  <span className="size-1 animate-pulse rounded-full bg-emerald-400" />
+                )}
+                {sourceLabel}
+              </span>
+            </div>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight">{agent.name}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
               <span className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 font-medium ${statusTone}`}>
                 {live.status === "active" && <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />}
