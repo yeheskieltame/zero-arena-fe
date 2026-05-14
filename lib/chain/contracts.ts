@@ -1,8 +1,7 @@
 // Contract addresses + ABIs for Galileo testnet (v0.2, deployed 2026-05-14).
 //
-// Addresses come from zero-arena-contracts/deployments/galileo-testnet.json
-// and can be overridden at deploy time via NEXT_PUBLIC_* env vars. ABIs are
-// the minimal surface the FE reads.
+// Addresses come from zero-arena-contracts/deployments/{galileo-testnet,galileo-paper-engine}.json.
+// Override any of them at deploy time via NEXT_PUBLIC_* env vars.
 
 import { parseAbi } from "viem";
 
