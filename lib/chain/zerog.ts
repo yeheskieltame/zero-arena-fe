@@ -26,10 +26,13 @@ export const zerog = defineChain({
 });
 
 // Block the v0.2 contracts were deployed at on 0G Mainnet. Used as `fromBlock`
-// when scanning logs — set to 0n until the mainnet deploy is recorded.
-// TODO(mainnet): replace with the actual deployment block to avoid scanning
-// the entire chain history on every page load.
-export const DEPLOY_BLOCK = BigInt(0);
+// when scanning logs — kept tight so the FE doesn't walk the entire chain
+// history on every page load.
+//
+// Source of truth: @zero-arena/contracts dist/addresses.json (mainnet entry)
+// and zero-arena-contracts/deployments/16661.json. Bump this in lockstep on
+// any redeploy.
+export const DEPLOY_BLOCK = BigInt(33_417_145);
 
 /** Convenience: build a 0G explorer URL for a tx hash or address. */
 export function explorerUrl(kind: "tx" | "address" | "token", value: string): string {

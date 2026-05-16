@@ -23,17 +23,17 @@ export interface CanonicalDataset {
 export const CANONICAL_DATASETS: Record<string, CanonicalDataset> = {
   "BTCUSDT-15m-spot": {
     rootHash:
-      "0xbdf356979b9dac6e742feb0362df54a158c0c358113d15233fa00e74fc5b3ad1",
+      "0x81a17c8b291b6bf77de03d6042cec83a517958dae5092025ee6b49ddcae962ff",
     datasetHash:
-      "0xef045d37191201052a600853e2a1f4bdcd0f6abed368b71d237e17b573972361",
+      "0x19b099f5ef0ceeb9b2d2c00aa339110f44c068f4dd9b1976db04b9733f4d6107",
     symbol: "BTCUSDT",
     interval: "15m",
     market: "spot",
     source: "binance",
     startTs: 1775952000000,
-    endTs: 1778553000000,
-    candleCount: 2891,
-    uploadedAt: "2026-05-12T02:35:51.166Z",
+    endTs: 1778557500000,
+    candleCount: 2896,
+    uploadedAt: "2026-05-16T11:58:00.000Z",
   },
 };
 
