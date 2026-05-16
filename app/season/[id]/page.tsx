@@ -14,6 +14,7 @@ import {
 } from "@/lib/chain/live";
 import { isDeployed, CONTRACTS } from "@/lib/chain/contracts";
 import { bpsToPct, fmtPctSigned, fmtPctUnsigned, truncateAddress } from "@/lib/agents";
+import EnrollSeasonButton from "@/app/_components/EnrollSeasonButton";
 
 export const revalidate = 60;
 
@@ -45,7 +46,7 @@ function statusOf(s: SeasonSummary): { label: string; tone: "live" | "scheduled"
 function RankBadge({ rank }: { rank: number }) {
   const styles =
     rank === 1
-      ? "bg-yellow-400 text-zinc-900"
+      ? "bg-green-400 text-zinc-900"
       : rank === 2
         ? "bg-zinc-300 text-zinc-900"
         : rank === 3
@@ -82,7 +83,7 @@ function LeaderboardRow({ entry, rank }: { entry: SeasonLeaderboardEntry; rank: 
     <tr className="transition hover:bg-zinc-900">
       <td className="px-4 py-3"><RankBadge rank={rank} /></td>
       <td className="px-4 py-3">
-        <Link href={`/agent/${entry.slug}/live`} className="text-sm font-medium text-zinc-100 hover:text-yellow-300">
+        <Link href={`/agent/${entry.slug}/live`} className="text-sm font-medium text-zinc-100 hover:text-green-300">
           {entry.name}
         </Link>
       </td>
@@ -106,7 +107,7 @@ function LeaderboardRow({ entry, rank }: { entry: SeasonLeaderboardEntry; rank: 
   );
 }
 
-function EmptyLeaderboard() {
+function EmptyLeaderboard({ seasonId }: { seasonId: bigint }) {
   return (
     <div className="mt-8 rounded-2xl border border-zinc-800/80 bg-zinc-900/40 p-12 text-center">
       <p className="text-sm text-zinc-400">No agents enrolled yet. Be the first.</p>
@@ -115,6 +116,12 @@ function EmptyLeaderboard() {
         <code className="rounded bg-zinc-800 px-1.5 py-0.5 font-mono text-zinc-300">enroll(seasonId, tokenId)</code>{" "}
         before the start time. After start, agents trade live; rankings refresh every 60 seconds.
       </p>
+      <div className="mt-4 flex justify-center">
+        <EnrollSeasonButton
+          seasonId={seasonId.toString()}
+          seasonLabel={`Season #${seasonId.toString()}`}
+        />
+      </div>
     </div>
   );
 }
@@ -197,10 +204,18 @@ export default async function SeasonDetailPage({
               </span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-500">Prize Pool</div>
-            <div className="mt-0.5 text-2xl font-bold tabular-nums text-yellow-300">{fmtPrize(season.prizePool)}</div>
-            <p className="mt-1 text-[11px] text-zinc-500">Top-3 split 50% / 30% / 20%</p>
+          <div className="flex flex-col items-end gap-2">
+            <div className="text-right">
+              <div className="text-[11px] uppercase tracking-wider text-zinc-500">Prize Pool</div>
+              <div className="mt-0.5 text-2xl font-bold tabular-nums text-green-300">{fmtPrize(season.prizePool)}</div>
+              <p className="mt-1 text-[11px] text-zinc-500">Top-3 split 50% / 30% / 20%</p>
+            </div>
+            {!season.settled && status.tone !== "ended" && (
+              <EnrollSeasonButton
+                seasonId={seasonId.toString()}
+                seasonLabel={`Season #${seasonId.toString()}`}
+              />
+            )}
           </div>
         </div>
 
@@ -235,7 +250,7 @@ export default async function SeasonDetailPage({
         </div>
 
         {entries.length === 0 ? (
-          <EmptyLeaderboard />
+          <EmptyLeaderboard seasonId={seasonId} />
         ) : (
           <div className="mt-8 overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/40">
             <table className="w-full text-left text-sm">

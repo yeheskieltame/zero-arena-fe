@@ -39,7 +39,7 @@ export default function Nav() {
             aria-current={active ? "page" : undefined}
             className={`border-b-2 pb-0.5 transition ${
               active
-                ? "border-yellow-400 text-zinc-100 font-medium"
+                ? "border-green-400 text-zinc-100 font-medium"
                 : "border-transparent text-zinc-400 hover:text-zinc-200"
             }`}
           >

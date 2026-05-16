@@ -20,6 +20,8 @@ import { findDataset, formatWindow } from "@/lib/chain/datasets";
 import { inferOperatorBadge } from "@/lib/chain/operators";
 import CopyButton from "@/app/_components/CopyButton";
 import { OperatorBadge } from "@/app/_components/OperatorBadge";
+import MintINftButton from "@/app/_components/MintINftButton";
+import DelegateAgentButton from "@/app/_components/DelegateAgentButton";
 import PerformanceChart from "./PerformanceChart";
 
 export const revalidate = 60;
@@ -269,9 +271,19 @@ export default async function AgentDetailPage({
           </div>
 
           <div className="flex w-full max-w-[180px] flex-col gap-2">
-            <button className="rounded-lg bg-yellow-400 py-2 text-sm font-semibold text-zinc-900 hover:bg-yellow-300">
-              Mint iNFT
-            </button>
+            <MintINftButton
+              tokenId={a.tokenId}
+              currentOwner={a.currentOwner}
+              agentName={a.name}
+            />
+            <DelegateAgentButton
+              tokenId={a.tokenId}
+              currentOwner={a.currentOwner}
+              genesisHash={a.runHash}
+              agentName={a.name}
+              defaultSymbol={`${a.asset.toLowerCase()}usdt`}
+              defaultMarket={a.market}
+            />
             <button className="rounded-lg border border-zinc-700 bg-zinc-900 py-2 text-sm font-medium text-zinc-200 hover:border-zinc-600">
               Clone & Re-run
             </button>
@@ -580,7 +592,7 @@ export default async function AgentDetailPage({
             >
               {tab.label}
               {tab.active && (
-                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-yellow-400" />
+                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-green-400" />
               )}
             </button>
           ))}

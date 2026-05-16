@@ -3,7 +3,7 @@
 // Minimal wallet button — injected connector only (MetaMask / Rabby /
 // Coinbase Wallet via injection). Renders three states:
 //
-//   • Disconnected         → yellow "Connect Wallet" pill
+//   • Disconnected         → green "Connect Wallet" pill
 //   • Connected, Galileo   → "● Galileo · 0x1234…5678" with dropdown
 //   • Connected, wrong net → "● Wrong network · 0x…" with one-click switch
 //
@@ -16,11 +16,10 @@ import { useEffect, useRef, useState } from "react";
 import {
   useAccount,
   useChainId,
-  useConnect,
   useDisconnect,
   useSwitchChain,
 } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { galileo } from "@/lib/chain/galileo";
 
 function truncate(addr: string): string {
@@ -30,7 +29,7 @@ function truncate(addr: string): string {
 export default function ConnectWallet() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const { connect, isPending } = useConnect();
+  const { openConnectModal } = useConnectModal();
   const { disconnect } = useDisconnect();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
   const [open, setOpen] = useState(false);
@@ -49,11 +48,11 @@ export default function ConnectWallet() {
   if (!isConnected || !address) {
     return (
       <button
-        onClick={() => connect({ connector: injected() })}
-        disabled={isPending}
-        className="ml-auto rounded-md bg-yellow-400 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:bg-yellow-300 disabled:opacity-60"
+        onClick={openConnectModal}
+        disabled={!openConnectModal}
+        className="ml-auto rounded-md bg-green-400 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:bg-green-300 disabled:opacity-60"
       >
-        {isPending ? "Connecting…" : "Connect Wallet"}
+        Connect Wallet
       </button>
     );
   }
@@ -98,7 +97,7 @@ export default function ConnectWallet() {
                 setOpen(false);
               }}
               disabled={isSwitching}
-              className="block w-full px-3 py-2.5 text-left text-xs text-yellow-300 hover:bg-zinc-900 disabled:opacity-60"
+              className="block w-full px-3 py-2.5 text-left text-xs text-green-300 hover:bg-zinc-900 disabled:opacity-60"
             >
               {isSwitching ? "Switching…" : "Switch to Galileo"}
             </button>

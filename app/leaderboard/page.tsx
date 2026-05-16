@@ -223,9 +223,9 @@ export default async function LeaderboardPage({
 
   const accents = {
     1: {
-      ring: "ring-yellow-400",
-      tint: "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400",
-      chip: "bg-yellow-400 text-zinc-900",
+      ring: "ring-green-400",
+      tint: "bg-gradient-to-r from-green-400 via-green-300 to-green-400",
+      chip: "bg-green-400 text-zinc-900",
     },
     2: {
       ring: "ring-zinc-300",
@@ -266,7 +266,7 @@ export default async function LeaderboardPage({
               <span className="text-zinc-300">Leaderboard</span>
             </div>
             <h1 className="mt-1 flex items-center gap-2 text-2xl font-bold tracking-tight">
-              <CrownIcon className="size-6 text-yellow-400" />
+              <CrownIcon className="size-6 text-green-400" />
               Top Verified Agents
             </h1>
             <p className="mt-1 max-w-xl text-sm text-zinc-500">
@@ -300,7 +300,7 @@ export default async function LeaderboardPage({
                   scroll={false}
                   className={`rounded-md border px-2.5 py-1 text-xs font-medium transition ${
                     active
-                      ? "border-yellow-400 bg-yellow-400 text-zinc-900"
+                      ? "border-green-400 bg-green-400 text-zinc-900"
                       : "border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700"
                   }`}
                 >
@@ -326,7 +326,7 @@ export default async function LeaderboardPage({
               >
                 {tab.label}
                 <span className="ml-1.5 text-xs text-zinc-500">{count}</span>
-                {active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-yellow-400" />}
+                {active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-green-400" />}
               </Link>
             );
           })}
@@ -344,7 +344,7 @@ export default async function LeaderboardPage({
                 title={m.desc}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                   active
-                    ? "bg-yellow-400 text-zinc-900"
+                    ? "bg-green-400 text-zinc-900"
                     : "border border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700 hover:text-zinc-100"
                 }`}
               >
@@ -398,7 +398,7 @@ export default async function LeaderboardPage({
                           <th
                             key={m.key}
                             className={`px-4 py-3 text-right font-medium ${
-                              m.key === metric ? "text-yellow-400" : ""
+                              m.key === metric ? "text-green-400" : ""
                             }`}
                           >
                             {m.label}
@@ -416,7 +416,7 @@ export default async function LeaderboardPage({
                               <span
                                 className={`inline-flex size-7 items-center justify-center rounded-full text-xs font-bold ${
                                   rank === 1
-                                    ? "bg-yellow-400 text-zinc-900"
+                                    ? "bg-green-400 text-zinc-900"
                                     : rank === 2
                                     ? "bg-zinc-300 text-zinc-900"
                                     : rank === 3

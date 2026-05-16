@@ -171,7 +171,7 @@ function AgentCard({ a }: { a: Agent }) {
         <span className="rounded-lg bg-zinc-800 py-2 text-center text-sm font-medium text-zinc-200 transition group-hover:bg-zinc-700">
           Inspect
         </span>
-        <span className="rounded-lg bg-yellow-400 py-2 text-center text-sm font-semibold text-zinc-900 transition group-hover:bg-yellow-300">
+        <span className="rounded-lg bg-green-400 py-2 text-center text-sm font-semibold text-zinc-900 transition group-hover:bg-green-300">
           Mint iNFT
         </span>
       </div>
@@ -253,7 +253,7 @@ export default async function AgentRegistryPage({
               >
                 {tab.label}
                 <span className="ml-1.5 text-xs text-zinc-500">{counts[tab.key]}</span>
-                {active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-yellow-400" />}
+                {active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-green-400" />}
               </Link>
             );
           })}
@@ -269,7 +269,7 @@ export default async function AgentRegistryPage({
             </button>
             <label className="ml-1 inline-flex cursor-pointer items-center gap-2 text-xs text-zinc-300">
               <span className="relative flex size-4 items-center justify-center rounded border border-zinc-600 bg-zinc-900">
-                <svg className="size-3 text-yellow-400" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg className="size-3 text-green-400" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M2.5 6.2L4.8 8.5 9.5 3.5" />
                 </svg>
               </span>

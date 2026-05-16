@@ -46,6 +46,11 @@ export const ZERO_ARENA_INFT_ABI = parseAbi([
   "function storageRoots(uint256 tokenId) view returns (bytes32)",
   "function certificateOf(uint256 tokenId) view returns (uint256)",
   "function nextTokenId() view returns (uint256)",
+  "function oracleSigner() view returns (address)",
+  // ERC-7857 — exact arg order unconfirmed; aligned with transfer-oracle
+  // payload in INTEGRATION.md (sealedKeyHash, newMetadataHash, deadline,
+  // oracle signature). Verify on contract source before mainnet use.
+  "function transferWithProof(address from, address to, uint256 tokenId, bytes32 sealedKeyHash, bytes32 newMetadataHash, uint256 deadline, bytes signature)",
   "event AgentMinted(uint256 indexed tokenId, address indexed owner, uint256 indexed certificateId, bytes32 metadataHash, bytes32 storageRoot)",
 ]);
 
@@ -55,6 +60,8 @@ export const LIVE_CERTIFICATE_ABI = parseAbi([
   "struct LiveRun { bytes32 cumulativeHash; uint64 startedAt; uint64 lastUpdatedAt; uint64 epochCount; uint8 status; uint16 liveMaxDrawdownBps; uint16 liveWinRateBps; int128 liveTotalReturnBps; uint128 liveSharpeX1000; }",
   "function get(uint256 tokenId) view returns (LiveRun r)",
   "function isActive(uint256 tokenId) view returns (bool)",
+  "function authorizedUpdaters(uint256 tokenId, address updater) view returns (bool)",
+  "function authorizeUpdater(uint256 tokenId, address updater, bool allowed)",
   "event PaperRunStarted(uint256 indexed tokenId, address indexed owner, uint64 startedAt, bytes32 initialCumulativeHash)",
   "event EpochCommitted(uint256 indexed tokenId, uint64 indexed epochIndex, bytes32 cumulativeHash, bytes32 epochHash, int128 liveTotalReturnBps, uint128 liveSharpeX1000)",
   "event PaperRunStopped(uint256 indexed tokenId, uint8 status, uint64 stoppedAt)",
@@ -67,6 +74,7 @@ export const SEASON_ABI = parseAbi([
   "function participantCount(uint256 seasonId) view returns (uint256)",
   "function getParticipants(uint256 seasonId) view returns (uint256[])",
   "function enrolled(uint256 seasonId, uint256 tokenId) view returns (bool)",
+  "function enroll(uint256 seasonId, uint256 tokenId)",
   "event SeasonCreated(uint256 indexed id, bytes32 indexed datasetSpec, uint64 startTime, uint64 endTime, uint256 prizePool)",
   "event Enrolled(uint256 indexed seasonId, uint256 indexed tokenId, address indexed owner)",
   "event Settled(uint256 indexed seasonId, uint256[] sortedWinners, uint256 paidOut)",

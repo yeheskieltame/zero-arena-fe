@@ -37,7 +37,7 @@ export default function RootLayout({
             <div className="mx-auto flex w-full max-w-7xl items-center gap-8 px-6 py-3 text-sm">
               <Link
                 href="/"
-                className="font-semibold tracking-tight text-yellow-400"
+                className="font-semibold tracking-tight text-green-400"
               >
                 ZeroArena
               </Link>

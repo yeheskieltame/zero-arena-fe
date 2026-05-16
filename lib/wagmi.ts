@@ -1,19 +1,26 @@
 // Wagmi config — used by the client-side <Providers> wrapper. Server-side
 // page data still goes through viem's publicClient (lib/chain/client.ts);
 // wagmi is reserved for components that need reactive chain state, wallet
-// connection, or transactions (v0.2 territory).
+// connection, or transactions.
+//
+// Connectors come from RainbowKit's getDefaultConfig: injected wallets,
+// Coinbase Wallet, and WalletConnect. WalletConnect requires a project ID
+// from cloud.walletconnect.com — read from NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID.
+// Placeholder is accepted at build time; only WC-based wallets fail to
+// connect when it's unset (injected wallets still work).
 
-import { http, createConfig } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { http } from "wagmi";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { galileo } from "./chain/galileo";
 
-export const wagmiConfig = createConfig({
+const projectId =
+  process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID?.trim() ||
+  "YOUR_WALLETCONNECT_PROJECT_ID";
+
+export const wagmiConfig = getDefaultConfig({
+  appName: "Zero Arena",
+  projectId,
   chains: [galileo],
-  // v0.1 supports the injected provider only (MetaMask, Rabby, Coinbase
-  // Wallet's injected bridge, etc.). WalletConnect / Coinbase SDK / Safe
-  // are out of scope until v0.2 — they need projectIds / app metadata that
-  // add hosting concerns the read-only dashboard doesn't justify yet.
-  connectors: [injected()],
   transports: {
     [galileo.id]: http(),
   },

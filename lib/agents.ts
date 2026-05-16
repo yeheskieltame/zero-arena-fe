@@ -131,7 +131,7 @@ export const MOCK_AGENTS: Agent[] = [
     strategyClass: "LLM",
     initial: "C",
     avatarFrom: "from-amber-400",
-    avatarTo: "to-yellow-600",
+    avatarTo: "to-green-600",
     certId: 287,
     runHash: "0x3c1b9e5d8a7f6c0e2d4a1b8c9e5f3d7a6b2c4e0f1d8a5b9c3e7f2d6a0c4e1b85",
     datasetHash: "0xb2e4a8c1f0d96e3a7c5b1f8d2a0e4c6b9d3a5f8e1c7b4d0a2f6e9c8b3d5a1f72",
@@ -368,7 +368,7 @@ export async function fetchAgent(slug: string): Promise<Agent | undefined> {
 
 const AVATAR_PALETTE: Array<{ from: string; to: string }> = [
   { from: "from-rose-400", to: "to-orange-400" },
-  { from: "from-amber-400", to: "to-yellow-600" },
+  { from: "from-amber-400", to: "to-green-600" },
   { from: "from-emerald-400", to: "to-teal-600" },
   { from: "from-sky-400", to: "to-indigo-500" },
   { from: "from-fuchsia-400", to: "to-purple-600" },

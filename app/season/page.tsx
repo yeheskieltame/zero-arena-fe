@@ -66,7 +66,7 @@ function SeasonCard({ s }: { s: SeasonSummary }) {
         </div>
         <div className="text-right">
           <div className="text-[11px] text-zinc-500">Prize Pool</div>
-          <div className="mt-0.5 font-semibold tabular-nums text-yellow-300">{fmtPrize(s.prizePool)}</div>
+          <div className="mt-0.5 font-semibold tabular-nums text-green-300">{fmtPrize(s.prizePool)}</div>
         </div>
         <div>
           <div className="text-[11px] text-zinc-500">Initial Balance</div>
